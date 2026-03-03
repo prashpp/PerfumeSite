@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { products } from '../data/products';
@@ -9,6 +9,30 @@ const filters = ['All Scents', 'Floral', 'Woody', 'Oud', 'Fresh'];
 
 export default function CollectionsPage() {
   const [activeFilter, setActiveFilter] = useState('All Scents');
+  const [sort, setSort] = useState('featured')
+
+  const filteredAndSorted = useMemo(() => {
+    const norm = (s = '') => String(s).toLowerCase()
+    const matchesFilter = (p) => {
+      if (activeFilter === 'All Scents') return true
+      const f = norm(activeFilter)
+      return norm(p.category).includes(f) || norm(p.notes).includes(f) || norm(p.name).includes(f)
+    }
+
+    const filtered = products.filter(matchesFilter)
+
+    const priceValue = (p) => parseFloat(String(p.price).replace(/[^0-9.-]+/g, '')) || 0
+
+    const sorted = [...filtered].sort((a, b) => {
+      if (sort === 'price-asc') return priceValue(a) - priceValue(b)
+      if (sort === 'price-desc') return priceValue(b) - priceValue(a)
+      if (sort === 'newest') return (b.id || 0) - (a.id || 0)
+      if (sort === 'name-asc') return String(a.name).localeCompare(String(b.name))
+      return 0
+    })
+
+    return sorted
+  }, [activeFilter, sort])
 
   return (
     <div className="bg-[#0D0D0E] min-h-screen">
@@ -71,19 +95,24 @@ export default function CollectionsPage() {
               </motion.button>
             ))}
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-slate-500 text-sm">Sort by:</span>
-            <select className="bg-transparent text-slate-200 text-sm font-bold focus:outline-none cursor-pointer">
-              <option className="bg-[#0D0D0E]">Featured</option>
-              <option className="bg-[#0D0D0E]">Price: Low to High</option>
-              <option className="bg-[#0D0D0E]">Newest First</option>
-            </select>
-          </div>
+            <div className="flex items-center gap-3">
+              <span className="text-slate-500 text-sm">Sort by:</span>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-transparent text-slate-200 text-sm font-bold focus:outline-none cursor-pointer"
+              >
+                <option value="featured" className="bg-[#0D0D0E]">Featured</option>
+                <option value="price-asc" className="bg-[#0D0D0E]">Price: Low to High</option>
+                <option value="price-desc" className="bg-[#0D0D0E]">Price: High to Low</option>
+                <option value="newest" className="bg-[#0D0D0E]">Newest First</option>
+              </select>
+            </div>
         </div>
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-14 gap-y-20">
-          {products.map((product, i) => (
+          {filteredAndSorted.map((product, i) => (
             <ProductCard key={product.id} product={product} index={i} />
           ))}
         </div>
@@ -96,7 +125,7 @@ export default function CollectionsPage() {
           >
             Discover More
           </motion.button>
-          <p className="text-slate-600 text-xs font-light">Showing {products.length} of 24 artisanal creations</p>
+          <p className="text-slate-600 text-xs font-light">Showing {filteredAndSorted.length} of {products.length} artisanal creations</p>
         </div>
       </div>
     </div>

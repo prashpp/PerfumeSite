@@ -1,15 +1,44 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Clock, Moon } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { productDetail } from '../data/products';
+import { Link, useParams } from 'react-router-dom';
+import { products, productDetail } from '../data/products';
 import FadeInSection from '../components/ui/FadeInSection';
 
 export default function ProductDetailPage() {
   const [activeThumb, setActiveThumb] = useState(0);
-  const p = productDetail;
+  const { id } = useParams()
 
-  const allImages = [p.mainImage, ...p.thumbnails];
+  // try to resolve product by numeric id first, then by slug id
+  const pBasic = products.find((x) => String(x.id) === String(id))
+  const p = pBasic || (id === productDetail.id ? productDetail : null)
+
+  if (!p) {
+    return (
+      <div className="bg-[#0D0D0E] min-h-screen flex items-center justify-center">
+        <div className="max-w-lg text-center px-6 py-12">
+          <h2 className="text-3xl font-serif text-white mb-4">Product not found</h2>
+          <p className="text-slate-400 mb-6">We couldn't find the product you're looking for. It may have been removed or the link is incorrect.</p>
+          <div className="flex items-center justify-center gap-4">
+            <Link to="/collections" className="px-6 py-3 bg-[#C5A059] text-[#0D0D0E] font-bold rounded">Back to Collections</Link>
+            <Link to="/" className="px-6 py-3 border border-white/10 text-slate-300 rounded">Home</Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const allImages = [p.mainImage || p.image, ...(p.thumbnails || [])]
+
+  // normalize fields for both `productDetail` and simple `products` entries
+  const subtitle = p.subtitle || (typeof p.notes === 'string' ? p.notes : '')
+  const description = p.description || p.desc || ''
+  const badges = p.badges || []
+  const notesObj = typeof p.notes === 'object'
+    ? p.notes
+    : { top: p.notes || '', heart: '', base: '' }
+  const origin = p.origin || ''
+  const volume = p.volume || p.size || ''
 
   return (
     <div className="bg-[#0D0D0E] min-h-screen">
@@ -71,7 +100,7 @@ export default function ProductDetailPage() {
           <div className="lg:col-span-5 flex flex-col gap-7">
             <FadeInSection>
               <span className="text-[#C5A059] font-bold tracking-widest text-xs uppercase mb-2 block">
-                {p.subtitle}
+                {subtitle}
               </span>
               <h1
                 className="text-5xl xl:text-6xl text-white leading-tight mb-3"
@@ -83,9 +112,9 @@ export default function ProductDetailPage() {
             </FadeInSection>
 
             <FadeInSection delay={0.1}>
-              <p className="text-lg text-slate-300 leading-relaxed font-light">{p.description}</p>
+              <p className="text-lg text-slate-300 leading-relaxed font-light">{description}</p>
               <div className="flex flex-wrap gap-2 mt-4">
-                {p.badges.map((badge) => (
+                {badges.map((badge) => (
                   <span
                     key={badge}
                     className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold tracking-tight uppercase text-slate-400"
@@ -113,9 +142,9 @@ export default function ProductDetailPage() {
                 <h3 className="text-sm font-bold tracking-widest uppercase mb-6 text-white">Scent Profile</h3>
                 <div className="space-y-5">
                   {[
-                    { label: 'Top Notes', value: p.notes.top },
-                    { label: 'Heart', value: p.notes.heart },
-                    { label: 'Base Notes', value: p.notes.base },
+                    { label: 'Top Notes', value: notesObj.top },
+                    { label: 'Heart', value: notesObj.heart },
+                    { label: 'Base Notes', value: notesObj.base },
                   ].map((note) => (
                     <div key={note.label} className="flex items-start gap-4">
                       <div className="w-20 shrink-0 text-[10px] font-bold tracking-widest text-[#C5A059] uppercase pt-0.5">
@@ -148,11 +177,11 @@ export default function ProductDetailPage() {
               <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-7">
                 <div>
                   <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Origin</span>
-                  <span className="text-sm text-slate-200">{p.origin}</span>
+                  <span className="text-sm text-slate-200">{origin}</span>
                 </div>
                 <div>
                   <span className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Volume</span>
-                  <span className="text-sm text-slate-200">{p.volume}</span>
+                  <span className="text-sm text-slate-200">{volume}</span>
                 </div>
               </div>
             </FadeInSection>

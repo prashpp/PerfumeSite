@@ -10,7 +10,10 @@
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-  ::selection { background-color: rgba(197,160,89,0.3); }
+
+  ::selection {
+    background-color: rgba(197, 160, 89, 0.3);
+  }
 }
 
 @layer components {
@@ -20,9 +23,11 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
   .hero-overlay {
     background: linear-gradient(to right, #0D0D0E 40%, transparent 100%);
   }
+
   .nav-link {
     font-size: 10px;
     text-transform: uppercase;
@@ -31,5 +36,8 @@
     color: #94a3b8;
     transition: color 0.5s;
   }
-  .nav-link:hover { color: #C5A059; }
+
+  .nav-link:hover {
+    color: #C5A059;
+  }
 }

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { heroImages } from '../../data/products';
 import Button from '../ui/Button';
 
@@ -65,7 +66,9 @@ export default function HeroSection() {
               Discover the invisible architecture of elegance. Meticulously hand-poured in Grasse, designed for the discerning soul.
             </p>
             <div className="flex gap-5">
-              <Button variant="primary">Shop the Scent</Button>
+              <Link to="/collections">
+                <Button variant="primary">Shop the Scent</Button>
+              </Link>
               <Button variant="outline">Our Heritage</Button>
             </div>
           </motion.div>

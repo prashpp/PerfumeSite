@@ -26,9 +26,8 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 z-[100] w-full px-8 md:px-16 py-5 transition-all duration-500 ${
-          scrolled ? 'border-b border-white/5 bg-[#0D0D0E]/90 backdrop-blur-xl' : 'bg-transparent'
-        }`}
+        className={`fixed top-0 z-[100] w-full px-8 md:px-16 py-5 transition-all duration-500 ${scrolled ? 'border-b border-white/5 bg-[#0D0D0E]/90 backdrop-blur-xl' : 'bg-transparent'
+          }`}
       >
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           {/* Left Nav */}
@@ -44,13 +43,11 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <motion.h1
+            <h1
               className="font-serif text-2xl font-light tracking-[0.35em] text-white uppercase"
-              whileHover={{ letterSpacing: '0.45em' }}
-              transition={{ duration: 0.4 }}
             >
               Aurelia
-            </motion.h1>
+            </h1>
           </Link>
 
           {/* Right Actions */}
