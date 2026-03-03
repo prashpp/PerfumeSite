@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0D0D0E;
+    color: #e2e8f0;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background-color: rgba(197,160,89,0.3); }
+}
+
+@layer components {
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #C5A059 0%, #F9F1C0 50%, #C5A059 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-overlay {
+    background: linear-gradient(to right, #0D0D0E 40%, transparent 100%);
+  }
+  .nav-link {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-weight: 500;
+    color: #94a3b8;
+    transition: color 0.5s;
+  }
+  .nav-link:hover { color: #C5A059; }
+}
